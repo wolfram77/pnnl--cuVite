@@ -34,8 +34,8 @@ option( OPTION_BUILD_EXAMPLES
         "Build examples."
         OFF )
 
-find_package(MPI REQUIRED)
-include_directories(${MPI_C_INCLUDE_PATH})
+# find_package(MPI REQUIRED)
+# include_directories(${MPI_C_INCLUDE_PATH})
 
 find_package(OpenMP REQUIRED)
 
@@ -85,8 +85,10 @@ endif()
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-set( CMAKE_C_COMPILER mpicc )
-set( CMAKE_CXX_COMPILER mpicxx )
+# set( CMAKE_C_COMPILER mpicc )
+set( CMAKE_C_COMPILER gcc )
+# set( CMAKE_CXX_COMPILER mpicxx )
+set( CMAKE_CXX_COMPILER g++ )
 
 set( VITE_COMPILE_MACRO_FLAGS -DDONT_CREATE_DIAG_FILES #-DDEBUG_PRINTF -DCHECK_COLORING_CONFLICTS
 )
@@ -95,16 +97,18 @@ set( CMAKE_CXX_FLAGS
       ### for Intel compilers use option below
       #"${CMAKE_CXX_FLAGS} -xHost ${OpenMP_CXX_FLAGS} ${VITE_COMPILE_MACRO_FLAGS} ${MPI_COMPILE_FLAGS}"
       ### for gcc compilers use option below
-      "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} ${VITE_COMPILE_MACRO_FLAGS} ${MPI_COMPILE_FLAGS}"
+    #   "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} ${VITE_COMPILE_MACRO_FLAGS} ${MPI_COMPILE_FLAGS}"
+      "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} ${VITE_COMPILE_MACRO_FLAGS}"
 )
 
 
-set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
+# set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
+set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS})
 # just in case, make use of CMAKE_EXE_LINKER_FLAGS
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS} -lm")
 
-set ( FILE_CONVERTER_FOLDER converters)
-add_subdirectory( ${FILE_CONVERTER_FOLDER} )
+# set ( FILE_CONVERTER_FOLDER converters)
+# add_subdirectory( ${FILE_CONVERTER_FOLDER} )
 
 set( TARGET_GRAPH_CLUSTERING  graphClustering )
 
@@ -126,8 +130,8 @@ CUDA_ADD_LIBRARY( cuda_louvain STATIC
     -Xcompiler -fopenmp
     #-Xcompiler -qsmp=omp
     -Xcompiler -fpermissive
-    -Xcompiler -mcpu=power9
-    -Xcompiler -mtune=power9
+    # -Xcompiler -mcpu=power9
+    # -Xcompiler -mtune=power9
     #-Xcompiler -qthreaded
     #DEBUG -g -G
 )
@@ -151,7 +155,8 @@ target_link_libraries(${TARGET_GRAPH_CLUSTERING}
 )
 ENDIF( DEFINE_RUNONGPU )
 
-include_directories(SYSTEM ${CMAKE_SOURCE_DIR} ${MPI_INCLUDE_PATH})
+# include_directories(SYSTEM ${CMAKE_SOURCE_DIR} ${MPI_INCLUDE_PATH})
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR})
 
 IF( DEFINE_RUNONGPU )
 install( TARGETS
